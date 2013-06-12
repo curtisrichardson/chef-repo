@@ -2,16 +2,18 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+ config.omnibus.chef_version = :latest
+
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "base"
+  config.vm.box = "opscode-Ubuntu-12.04"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+ config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -108,4 +110,12 @@ Vagrant.configure("2") do |config|
   # chef-validator, unless you changed the configuration.
   #
   #   chef.validation_client_name = "ORGNAME-validator"
+
+config.vm.provision :chef_client do |chef|
+    chef.chef_server_url = "https://api.opscode.com/organizations/cjr"
+    chef.validation_key_path = ".chef/cjr-validator.pem"
+    chef.validation_client_name = "cjr-validator"
+    chef.node_name = "curtis_vm"
 end
+end
+
